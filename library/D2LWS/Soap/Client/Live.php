@@ -36,6 +36,8 @@ class D2LWS_Soap_Client_Live implements D2LWS_Soap_Client
     protected $_location;
     
     protected $_clients = array();
+
+    protected $_clientClassName = 'D2LWS_Soap_Client_Live_Client';
     
     /**
      * Default constructor for SOAP client
@@ -60,7 +62,8 @@ class D2LWS_Soap_Client_Live implements D2LWS_Soap_Client
     {
         $clientKey = md5($this->getWsdl() . "@" . $this->getLocation());
         if ( !isset($this->_clients[$clientKey]) ) {
-            $this->_clients[$clientKey] = new D2LWS_Soap_Client_Live_Client(
+            $className = $this->getClientClassName();
+            $this->_clients[$clientKey] = new $className(
                 $this->_constructorArgs['wsdl'],
                 $this->_constructorArgs['options']
             );
@@ -74,6 +77,19 @@ class D2LWS_Soap_Client_Live implements D2LWS_Soap_Client
             }
         }
         return $this->_clients[$clientKey]->__call($method, $args);
+    }
+
+    public function setClientClassName($nm)
+    {
+        if (class_exists($nm)) {
+            $this->_clientClassName = $nm;
+        }
+        return $this;
+    }
+
+    public function getClientClassName()
+    {
+        return $this->_clientClassName;
     }
 
     public function setLocation($location)

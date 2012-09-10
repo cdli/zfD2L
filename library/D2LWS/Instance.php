@@ -142,6 +142,7 @@ class D2LWS_Instance
      */
     public function setSoapClient(D2LWS_Soap_Client $sc)
     {
+        $sc->setInstance($this);
         $this->_soapObj = $sc;
         return $this;
     }    
