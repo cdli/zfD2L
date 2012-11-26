@@ -52,13 +52,24 @@ class D2LWS_Authenticate extends D2LWS_Common
     {
         if ( $this->tokenHasExpired() )
         {
-            if ( !$this->authenticate() )
-            {
-                throw new D2LWS_Soap_Client_Exception_AuthenticationFailed();
-            }
+            $this->getNewToken();
         }
         
         $this->_tokenMaxUse--;
+        return $this->_token;
+    }
+
+    /**
+     * Force generation of a fresh authentication token
+     * @return string - Valid authentication token
+     * @throws D2LWS_Soap_Client_Exception_AuthenticationFailed - Authentication with D2L server fails
+     */
+    public function getNewToken()
+    {
+        if ( !$this->authenticate() )
+        {
+            throw new D2LWS_Soap_Client_Exception_AuthenticationFailed();
+        }
         return $this->_token;
     }
     

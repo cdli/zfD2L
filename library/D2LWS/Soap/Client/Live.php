@@ -76,7 +76,20 @@ class D2LWS_Soap_Client_Live implements D2LWS_Soap_Client
                 $this->_clients[$clientKey]->setWsdl($this->getWsdl());
             }
         }
-        return $this->_clients[$clientKey]->__call($method, $args);
+
+        // Retry up to 5 times if expired authentication token is detected
+        for ( $i = 1 ; $i <= 5; $i++ ) {
+            try {
+                return $this->_clients[$clientKey]->__call($method, $args);
+            } catch ( D2LWS_Soap_Client_Exception $ex ) {
+                // If it's an expired authentication token
+                if ( $i < 5 && preg_match('/Expired authentication token/i', $ex->getMessage()) ) {
+                    $this->getInstance()->getAuthManager()->getNewToken();
+                    continue;
+                }
+                throw $ex;
+            }
+        }
     }
 
     public function setClientClassName($nm)
