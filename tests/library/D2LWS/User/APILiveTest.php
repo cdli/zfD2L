@@ -177,6 +177,44 @@ class D2LWS_User_APILiveTest extends LiveTestCase
         $RoleID = $this->config->phpunit->live->roles->student->ouid;        
         $this->assertTrue($this->service->enrollUserInOUASRole($u->getUserID(), $OUID, $RoleID));
     }
+
+    /**
+     * @depends testEnrollUserFromOrgUnit
+     */
+    public function testIsUserEnrolledInOUAsRoleWhenUserIsEnrolled(D2LWS_User_Model $u)
+    {
+        $OUID = $this->config->phpunit->live->course_offering->ouid;
+        $RoleID = $this->config->phpunit->live->roles->student->ouid;        
+        $this->assertTrue($this->service->isUserEnrolledInOUASRole($u->getUserID(), $OUID, $RoleID));
+    }
+
+    /**
+     * @depends testUnenrollUserFromOrgUnit
+     */
+    public function testIsUserEnrolledInOUAsRoleWhenUserIsNotEnrolled(D2LWS_User_Model $u)
+    {
+        $OUID = $this->config->phpunit->live->course_offering->ouid;
+        $RoleID = $this->config->phpunit->live->roles->student->ouid;        
+        $this->assertFalse($this->service->isUserEnrolledInOUASRole($u->getUserID(), $OUID, $RoleID));
+    }
+ 
+    /**
+     * @depends testEnrollUserFromOrgUnit
+     */
+    public function testIsUserEnrolledInOUWhenUserIsEnrolled(D2LWS_User_Model $u)
+    {
+        $OUID = $this->config->phpunit->live->course_offering->ouid;
+        $this->assertTrue($this->service->isUserEnrolledInOU($u->getUserID(), $OUID));
+    }
+
+    /**
+     * @depends testUnenrollUserFromOrgUnit
+     */
+    public function testIsUserEnrolledInOUWhenUserIsNotEnrolled(D2LWS_User_Model $u)
+    {
+        $OUID = $this->config->phpunit->live->course_offering->ouid;
+        $this->assertFalse($this->service->isUserEnrolledInOU($u->getUserID(), $OUID));
+    }
     
     public function testCreateUser()
     {
