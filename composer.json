@@ -1,0 +1,11 @@
+{
+    "name": "cdli/zf-d2l",
+    "description": "Desire2Learn API for Zend Framework",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Adam Lundrigan",
+            "email": "adamlundrigan@cdli.ca"
+        }
+    ]
+}
